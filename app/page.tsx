@@ -1,7 +1,7 @@
+/* eslint-disable @next/next/no-img-element -- vinext does not safely hydrate next/image in this RSC route */
 import ExperienceController from './experience';
 import SignalEngine from './signal-engine';
 import { FlywheelEngine, ProductEngine } from './product-engine';
-import Image from 'next/image';
 
 const products = [
   {
@@ -51,7 +51,7 @@ export default function Home() {
       <a className="skip-link" href="#platform">Skip to the platform</a>
       <header className="site-nav">
         <a className="brand brand-image" href="#top" aria-label="Tequila Town Tech home">
-          <Image src="/brand/tequila-town-tech-horizontal.png" alt="Tequila Town Tech" width={1803} height={407} priority sizes="(max-width: 720px) 174px, 238px" />
+          <img src="/brand/tequila-town-tech-horizontal.png" alt="Tequila Town Tech" width="1803" height="407" fetchPriority="high" decoding="async" />
         </a>
         <nav aria-label="Primary navigation">
           <a href="#platform">Platform</a><a href="#products">Products</a><a href="#flywheel">Flywheel</a><a href="#roadmap">Build plan</a>
@@ -146,9 +146,9 @@ export default function Home() {
 
       <section className="closing">
         <div className="closing-signal" aria-hidden="true"/><p>The venue is the experience.</p><h2>The technology is<br/><em>the multiplier.</em></h2><a href="#top">Return to the system <span>↑</span></a>
-        <Image className="closing-brand" src="/brand/tequila-town-tech-badge.png" alt="Tequila Town Tech" width={1024} height={1024} sizes="(max-width: 720px) 128px, 190px" />
+        <img className="closing-brand" src="/brand/tequila-town-tech-badge.png" alt="Tequila Town Tech" width="1024" height="1024" loading="lazy" decoding="async" />
       </section>
-      <footer><span className="footer-brand"><Image src="/brand/tequila-town-tech-horizontal.png" alt="Tequila Town Tech" width={1803} height={407} sizes="148px" /><small>© 2026</small></span><span>Experience intelligence platform</span><span>Built around the physical experience</span></footer>
+      <footer><span className="footer-brand"><img src="/brand/tequila-town-tech-horizontal.png" alt="Tequila Town Tech" width="1803" height="407" loading="lazy" decoding="async" /><small>© 2026</small></span><span>Experience intelligence platform</span><span>Built around the physical experience</span></footer>
     </main>
   );
 }
