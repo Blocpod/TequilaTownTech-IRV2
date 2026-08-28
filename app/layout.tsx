@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import './globals.css';
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://tequila-town-technology.blocpodcreative.chatgpt.site'),
   title: 'T³ — Tequila Town Technology',
   description: 'The technology operating system around Tequila Town: acquisition, guest experience, operations, and executive intelligence.',
   icons: { icon: '/favicon.svg' },
