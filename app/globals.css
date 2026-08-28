@@ -54,3 +54,12 @@
 
 .closing-agave{position:relative;grid-row:1/3;width:56px;height:56px;margin-right:1rem;font-size:0!important}
 .closing-agave i{position:absolute;left:25px;bottom:7px;width:6px;height:38px;background:var(--lime);transform-origin:50% 100%}.closing-agave i:nth-child(2){transform:rotate(-36deg);background:var(--cream)}.closing-agave i:nth-child(3){transform:rotate(36deg);background:var(--cream)}.closing-agave i:nth-child(4){transform:rotate(-67deg);height:31px;background:#a6e187}.closing-agave i:nth-child(5){transform:rotate(67deg);height:31px;background:#a6e187}
+
+/* V4 — source-logo-derived identity system */
+.brand-image{display:block;width:clamp(176px,15.5vw,238px);height:54px;overflow:visible}
+.brand-image img{display:block;width:100%;height:100%;object-fit:contain;object-position:left center;filter:drop-shadow(0 8px 24px rgba(0,0,0,.3))}
+@media(max-width:720px){.brand-image{width:174px;height:48px}}
+@media(max-width:380px){.brand-image{width:156px}}
+.closing-brand{position:relative;z-index:2;width:clamp(132px,12vw,190px);height:auto;margin-top:auto;object-fit:contain;border-radius:50%;box-shadow:0 24px 80px rgba(0,0,0,.4)}
+.footer-brand{display:flex;align-items:center;gap:.8rem}.footer-brand img{display:block;width:148px;height:32px;object-fit:contain;object-position:left center}.footer-brand small{color:var(--muted);font:500 .5rem/1 monospace}
+@media(max-width:720px){.closing-brand{width:128px}.footer-brand img{width:138px}}

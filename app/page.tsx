@@ -1,6 +1,7 @@
 import ExperienceController from './experience';
 import SignalEngine from './signal-engine';
 import { FlywheelEngine, ProductEngine } from './product-engine';
+import Image from 'next/image';
 
 const products = [
   {
@@ -49,9 +50,8 @@ export default function Home() {
       <ExperienceController />
       <a className="skip-link" href="#platform">Skip to the platform</a>
       <header className="site-nav">
-        <a className="brand" href="#top" aria-label="Tequila Town Technology home">
-          <span className="brand-mark brand-mark-v3" aria-hidden="true"><i/><i/><i/><i/><i/><i/><i/></span>
-          <span className="brand-name brand-name-v2"><strong>TEQUILA TOWN</strong><em>TECHNOLOGY</em></span>
+        <a className="brand brand-image" href="#top" aria-label="Tequila Town Tech home">
+          <Image src="/brand/tequila-town-tech-horizontal.png" alt="Tequila Town Tech" width={1803} height={407} priority sizes="(max-width: 720px) 174px, 238px" />
         </a>
         <nav aria-label="Primary navigation">
           <a href="#platform">Platform</a><a href="#products">Products</a><a href="#flywheel">Flywheel</a><a href="#roadmap">Build plan</a>
@@ -64,7 +64,7 @@ export default function Home() {
         <SignalEngine />
         <div className="hero-vignette" aria-hidden="true" />
         <div className="hero-copy" data-reveal>
-          <p className="hero-brandline"><span>TEQUILA TOWN</span><b>TECHNOLOGY</b></p>
+          <p className="hero-brandline"><span>TEQUILA TOWN</span><b>TECH</b></p>
           <p className="eyebrow"><span>Real-world experience intelligence</span><span>System / 01—04</span></p>
           <h1 id="hero-title">The experience is physical.<br/><em>The multiplier is digital.</em></h1>
           <p className="hero-lede">Tequila Town is building a coordinated technology operating system around how it finds demand, engages guests, runs the operation, and sees the whole business.</p>
@@ -77,8 +77,8 @@ export default function Home() {
         <div className="section-index">01 / Platform premise</div>
         <div className="platform-copy" data-reveal>
           <p>Tequila Town is more than a venue.</p>
-          <h2>The physical experience creates the signal.<br/><em>T³ turns it into leverage.</em></h2>
-          <div className="platform-detail"><p>Acquisition, guest behavior, operations, and executive decisions are usually fragmented. T³ connects them into one learning system designed around the reality of a live experiential business.</p><p>The venue remains the attraction. Technology makes every cycle more intelligible, more coordinated, and increasingly repeatable.</p></div>
+          <h2>The physical experience creates the signal.<br/><em>Tequila Town Tech turns it into leverage.</em></h2>
+          <div className="platform-detail"><p>Acquisition, guest behavior, operations, and executive decisions are usually fragmented. The platform connects them into one learning system designed around the reality of a live experiential business.</p><p>The venue remains the attraction. Technology makes every cycle more intelligible, more coordinated, and increasingly repeatable.</p></div>
         </div>
         <div className="word-crop" aria-hidden="true"><span>TEQUILA</span><span>TOWN</span></div>
       </section>
@@ -119,7 +119,7 @@ export default function Home() {
         <div className="command-plate" aria-hidden="true"/>
         <div className="command-copy" data-reveal><span className="section-index">04 / Executive intelligence</span><h2>The command layer is not more dashboards.</h2><p>It is one place that answers the questions leadership actually has: What changed? What matters? Where is revenue moving? What should happen next?</p></div>
         <div className="command-console" data-reveal>
-          <header><span><i/> T³ CONTROL CENTER</span><b>EXECUTIVE BRIEF · TODAY</b></header>
+          <header><span><i/> TEQUILA TOWN TECH / CONTROL</span><b>EXECUTIVE BRIEF · TODAY</b></header>
           <div className="console-grid">
             <div className="console-main"><small>PRIORITY QUESTION</small><h3>What requires attention today?</h3><div className="priority"><span>01</span><div><b>Qualified group demand requires faster follow-up.</b><p>Radar has surfaced a cluster of high-fit opportunities. Current sales capacity is the constraint, not demand.</p></div></div><div className="recommend"><small>RECOMMENDED NEXT ACTION</small><p>Route the highest-fit accounts into an approval-ready outreach mission.</p></div></div>
             <aside><div><small>SYSTEM SIGNALS</small><p><i className="l1"/>Radar <b>Opportunity</b></p><p><i className="l2"/>App <b>Participation</b></p><p><i className="l3"/>Swarm <b>Capacity</b></p></div><div><small>OPERATING STATE</small><strong>Connected view</strong><span>Working foundation → production integration</span></div></aside>
@@ -146,9 +146,9 @@ export default function Home() {
 
       <section className="closing">
         <div className="closing-signal" aria-hidden="true"/><p>The venue is the experience.</p><h2>The technology is<br/><em>the multiplier.</em></h2><a href="#top">Return to the system <span>↑</span></a>
-        <div className="closing-mark" aria-label="Tequila Town Technology"><span className="closing-agave" aria-hidden="true"><i/><i/><i/><i/><i/></span><span>TEQUILA TOWN</span><small>TECHNOLOGY</small></div>
+        <Image className="closing-brand" src="/brand/tequila-town-tech-badge.png" alt="Tequila Town Tech" width={1024} height={1024} sizes="(max-width: 720px) 128px, 190px" />
       </section>
-      <footer><span>© 2026 Tequila Town Technology</span><span>Experience intelligence platform</span><span>Built around the physical experience</span></footer>
+      <footer><span className="footer-brand"><Image src="/brand/tequila-town-tech-horizontal.png" alt="Tequila Town Tech" width={1803} height={407} sizes="148px" /><small>© 2026</small></span><span>Experience intelligence platform</span><span>Built around the physical experience</span></footer>
     </main>
   );
 }

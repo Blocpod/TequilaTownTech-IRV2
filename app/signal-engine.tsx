@@ -137,7 +137,7 @@ export default function SignalEngine(){
     bind('a_position',3,0);bind('a_tone',1,3);bind('a_delay',1,4);bind('a_size',1,5);
     const resolution=gl.getUniformLocation(program,'u_resolution'),pointerLoc=gl.getUniformLocation(program,'u_pointer'),time=gl.getUniformLocation(program,'u_time'),progress=gl.getUniformLocation(program,'u_progress'),scroll=gl.getUniformLocation(program,'u_scroll');
     gl.enable(gl.DEPTH_TEST);gl.depthFunc(gl.LEQUAL);gl.enable(gl.BLEND);gl.blendFunc(gl.SRC_ALPHA,gl.ONE_MINUS_SRC_ALPHA);gl.clearColor(.012,.027,.018,1);
-    let target={x:.5,y:.5},pointer={...target},raf=0,visible=true,start=performance.now();
+    let target={x:.5,y:.5},raf=0,visible=true;const pointer={...target},start=performance.now();
     const resize=()=>{const dpr=Math.min(devicePixelRatio,innerWidth<720?1.25:1.65),rect=canvas.getBoundingClientRect();canvas.width=Math.max(1,Math.floor(rect.width*dpr));canvas.height=Math.max(1,Math.floor(rect.height*dpr));gl.viewport(0,0,canvas.width,canvas.height);};
     const move=(e:PointerEvent)=>{target={x:e.clientX/innerWidth,y:1-e.clientY/innerHeight};};
     const onVisibility=()=>{visible=!document.hidden;if(visible&&!raf)raf=requestAnimationFrame(draw);};
