@@ -1,26 +1,32 @@
 import ExperienceController from './experience';
+import SignalEngine from './signal-engine';
+import { FlywheelEngine, ProductEngine } from './product-engine';
 
 const products = [
   {
     index: '01', phase: 'Acquire', name: 'Radar', tone: 'radar',
+    visualLabel: 'Buyer qualification field',
     thesis: 'Find demand before demand finds us.',
     description: 'Demand intelligence that identifies, verifies, scores, and prioritizes high-value buyers—then points the team toward the next best action.',
     proof: ['Buyer, not supplier, targeting', 'Evidence-backed fit scoring', 'Model-agnostic intelligence'],
   },
   {
     index: '02', phase: 'Experience', name: 'Tequila Town App', tone: 'app',
+    visualLabel: 'Guest journey map',
     thesis: 'Turn attendance into participation.',
     description: 'A digital companion for tickets, wayfinding, missions, passport progression, recommendations, rewards, and a measurable guest journey.',
     proof: ['Ticket-to-profile connection', 'Journey and mission guidance', 'Participation intelligence'],
   },
   {
     index: '03', phase: 'Operate', name: 'Agent Swarm', tone: 'swarm',
+    visualLabel: 'Mission routing lattice',
     thesis: 'Give the operation a digital workforce.',
     description: 'One orchestrator routes missions across specialist agents for guest service, commerce, operations, sponsors, analytics, and creative execution.',
     proof: ['Coordinated mission routing', 'Specialist execution', 'Human approval and visibility'],
   },
   {
     index: '04', phase: 'Control', name: 'Control Center', tone: 'control',
+    visualLabel: 'Live operating picture',
     thesis: 'See the whole business at once.',
     description: 'One prioritized operating picture for demand, sales, guests, operations, sponsors, marketing, and AI activity.',
     proof: ['Decision-first daily brief', 'Cross-system attention queue', 'Recommended next actions'],
@@ -37,49 +43,6 @@ function Glyph({ type }: { type: string }) {
   return <svg className="glyph" viewBox="0 0 72 72" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">{paths[type]}</svg>;
 }
 
-function MiniProduct({ type }: { type: string }) {
-  if (type === 'radar') return (
-    <div className="mini radar-ui" aria-label="Illustrative Radar buyer qualification workflow">
-      <div className="mini-bar"><span><i/> Live buyer scan</span><b>Corporate / Miami</b></div>
-      <div className="scan-map"><div className="scan-ring"/><i className="ping p1"/><i className="ping p2"/><i className="ping p3"/><span>Verified signal field</span></div>
-      <div className="lead-list">
-        <div><span><b>Private member network</b><small>Group experience buyer</small></span><em>94</em></div>
-        <div><span><b>Executive culture team</b><small>Corporate offsite</small></span><em>87</em></div>
-        <div className="rejected"><span><b>Event venue supplier</b><small>Excluded by buyer filter</small></span><em>×</em></div>
-      </div>
-    </div>
-  );
-  if (type === 'app') return (
-    <div className="mini app-ui" aria-label="Illustrative Tequila Town guest journey workflow">
-      <div className="phone-shell">
-        <div className="phone-top"><span>12:34</span><b>TOWN PASS</b><i/></div>
-        <div className="guest-card"><small>YOUR JOURNEY</small><b>Chapter 03 · The Agave</b><div className="journey-line"><i/><i/><i/><i/></div></div>
-        <div className="map-card"><span className="map-path"/><i className="waypoint w1">1</i><i className="waypoint w2">2</i><i className="waypoint w3">3</i></div>
-        <div className="passport"><span><small>PASSPORT</small><b>Journey in progress</b></span><strong>03/08</strong></div>
-      </div>
-    </div>
-  );
-  if (type === 'swarm') return (
-    <div className="mini swarm-ui" aria-label="Illustrative Agent Swarm mission routing workflow">
-      <div className="mini-bar"><span><i/> Mission active</span><b>Human approval on</b></div>
-      <div className="agent-map">
-        <div className="orchestrator"><small>MASTER</small><b>Route</b></div>
-        <span className="route r1"/><span className="route r2"/><span className="route r3"/>
-        <div className="agent a1"><i>G</i><span>Guest</span></div><div className="agent a2"><i>C</i><span>Commerce</span></div><div className="agent a3"><i>O</i><span>Ops</span></div>
-      </div>
-      <div className="mission-log"><div><i/> Guest brief assembled <span>Complete</span></div><div><i/> VIP opportunity routed <span>Review</span></div></div>
-    </div>
-  );
-  return (
-    <div className="mini control-ui" aria-label="Illustrative Control Center executive brief">
-      <div className="mini-bar"><span><i/> Executive brief</span><b>Today · 08:30</b></div>
-      <div className="kpi-row"><div><small>Demand</small><b>Rising</b></div><div><small>Guest</small><b>Active</b></div><div><small>Ops</small><b>Stable</b></div></div>
-      <div className="attention"><small>WHAT REQUIRES ATTENTION?</small><b>High-value group demand is outpacing current follow-up capacity.</b><p><span>Recommended action</span> Route the top qualified buyers to the sales mission queue.</p></div>
-      <div className="signal-legend"><span><i className="l1"/>Radar</span><span><i className="l2"/>App</span><span><i className="l3"/>Swarm</span></div>
-    </div>
-  );
-}
-
 export default function Home() {
   return (
     <main>
@@ -87,29 +50,25 @@ export default function Home() {
       <a className="skip-link" href="#platform">Skip to the platform</a>
       <header className="site-nav">
         <a className="brand" href="#top" aria-label="Tequila Town Technology home">
-          <span className="brand-mark" aria-hidden="true" />
-          <span className="brand-name">Tequila Town <em>Technology</em></span>
+          <span className="brand-mark brand-mark-v3" aria-hidden="true"><i/><i/><i/><i/><i/><i/><i/></span>
+          <span className="brand-name brand-name-v2"><strong>TEQUILA TOWN</strong><em>TECHNOLOGY</em></span>
         </a>
         <nav aria-label="Primary navigation">
           <a href="#platform">Platform</a><a href="#products">Products</a><a href="#flywheel">Flywheel</a><a href="#roadmap">Build plan</a>
         </nav>
-        <a className="nav-cta" href="#products">Explore T³ <span aria-hidden="true">↘</span></a>
+        <a className="nav-cta" href="#products">Enter system <span aria-hidden="true">↘</span></a>
         <details className="mobile-menu"><summary aria-label="Open navigation"><span/><span/></summary><nav><a href="#platform">Platform</a><a href="#products">Products</a><a href="#flywheel">Flywheel</a><a href="#roadmap">Build plan</a></nav></details>
       </header>
 
       <section className="hero" id="top" aria-labelledby="hero-title">
-        <div className="hero-plate" aria-hidden="true"/><div className="hero-noise" aria-hidden="true" />
+        <SignalEngine />
+        <div className="hero-vignette" aria-hidden="true" />
         <div className="hero-copy" data-reveal>
-          <p className="eyebrow"><span>Investor technology thesis</span><span>01 — 04</span></p>
+          <p className="hero-brandline"><span>TEQUILA TOWN</span><b>TECHNOLOGY</b></p>
+          <p className="eyebrow"><span>Real-world experience intelligence</span><span>System / 01—04</span></p>
           <h1 id="hero-title">The experience is physical.<br/><em>The multiplier is digital.</em></h1>
           <p className="hero-lede">Tequila Town is building a coordinated technology operating system around how it finds demand, engages guests, runs the operation, and sees the whole business.</p>
           <a className="primary-link" href="#platform">Enter the operating system <span aria-hidden="true">↓</span></a>
-        </div>
-        <div className="system-field" aria-label="T cubed operating system: Acquire, Experience, Operate, Control" data-reveal>
-          <div className="field-grid" aria-hidden="true"/><div className="core"><span>Shared intelligence</span><strong>T<sup>3</sup></strong><small><i/> Architecture live</small></div>
-          <div className="signal-loop" aria-hidden="true"><i/><i/><i/><i/></div>
-          {products.map((p, i) => <article className={`system-node node-${i+1} ${p.tone}`} key={p.tone}><span>{p.index}</span><div><small>{p.phase}</small><strong>{p.name}</strong></div><i/></article>)}
-          <p className="field-caption">Four layers. One compounding operating picture.</p>
         </div>
         <div className="hero-proof"><span><b>04</b> coordinated layers</span><span><b>01</b> shared architecture</span><span><b>NOW</b> working foundations</span></div>
       </section>
@@ -134,7 +93,7 @@ export default function Home() {
                 <p className="product-overline">Tequila Town</p><h3>{product.name}</h3><h4>{product.thesis}</h4><p>{product.description}</p>
                 <ul>{product.proof.map(item => <li key={item}>{item}</li>)}</ul>
               </div>
-              <div className="product-visual"><div className="illustrative">Illustrative product workflow</div><MiniProduct type={product.tone}/></div>
+              <div className="product-visual"><div className="illustrative">{product.visualLabel}</div><ProductEngine type={product.tone as 'radar'|'app'|'swarm'|'control'}/></div>
             </article>
           ))}
         </div>
@@ -152,11 +111,7 @@ export default function Home() {
               <article><span>04</span><div><b>Control improves the next cycle.</b><p>Results return as prioritized management intelligence.</p></div></article>
             </div>
           </div>
-          <div className="fly-diagram" aria-hidden="true">
-            <div className="fly-core">T<sup>3</sup><small>Compounding<br/>intelligence</small></div><div className="fly-orbit"/>
-            {products.map((p,i)=><div className={`fly-node fly-${i+1} ${p.tone}`} key={p.tone}><i/><span>{p.phase}</span><b>{p.name}</b></div>)}
-            <div className="travel-signal"/>
-          </div>
+          <FlywheelEngine />
         </div>
       </section>
 
@@ -191,9 +146,9 @@ export default function Home() {
 
       <section className="closing">
         <div className="closing-signal" aria-hidden="true"/><p>The venue is the experience.</p><h2>The technology is<br/><em>the multiplier.</em></h2><a href="#top">Return to the system <span>↑</span></a>
-        <div className="closing-mark" aria-label="T cubed, Tequila Town Technology"><strong>T<sup>3</sup></strong><span>TEQUILA TOWN</span><small>TECHNOLOGY</small></div>
+        <div className="closing-mark" aria-label="Tequila Town Technology"><span className="closing-agave" aria-hidden="true"><i/><i/><i/><i/><i/></span><span>TEQUILA TOWN</span><small>TECHNOLOGY</small></div>
       </section>
-      <footer><span>© 2026 Tequila Town Technology</span><span>Investor technology narrative</span><span>Built around the physical experience</span></footer>
+      <footer><span>© 2026 Tequila Town Technology</span><span>Experience intelligence platform</span><span>Built around the physical experience</span></footer>
     </main>
   );
 }
