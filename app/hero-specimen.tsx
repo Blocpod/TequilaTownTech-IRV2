@@ -32,7 +32,7 @@ export default function HeroSpecimen() {
   },[]);
 
   useEffect(()=>{
-    const canvas=ref.current;if(!canvas)return;const ctx=canvas.getContext('2d');if(!ctx)return;
+    const canvas=ref.current;if(!canvas)return;const context=canvas.getContext('2d');if(!context)return;const ctx=context;
     const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
     const fine=matchMedia('(hover:hover) and (pointer:fine)').matches;
     let w=0,h=0,dpr=1,raf=0,visible=true,lastDraw=0;const start=performance.now();

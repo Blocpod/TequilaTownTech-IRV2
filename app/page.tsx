@@ -1,4 +1,4 @@
-/* eslint-disable @next/next/no-img-element -- vinext safely serves static brand assets */
+/* eslint-disable @next/next/no-img-element -- static brand assets are intentionally rendered without transformation */
 import FreshExperience from './fresh-experience';
 import HeroSpecimen from './hero-specimen';
 import { AppStory, ControlStory, OperatingLoopStory, RadarStory, SwarmStory } from './product-stories';
