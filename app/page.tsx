@@ -1,154 +1,148 @@
-/* eslint-disable @next/next/no-img-element -- vinext does not safely hydrate next/image in this RSC route */
-import ExperienceController from './experience';
-import SignalEngine from './signal-engine';
+/* eslint-disable @next/next/no-img-element -- vinext safely serves the optimized static brand assets */
+import AgaveField from './agave-field';
+import ExperienceV6 from './experience-v6';
+import FlightStage from './flight-stage';
 import { FlywheelEngine, ProductEngine } from './product-engine';
 
-const products = [
+type ProductType = 'radar' | 'app' | 'swarm' | 'control';
+
+const products: Array<{
+  id: string;
+  type: ProductType;
+  number: string;
+  phase: string;
+  name: string;
+  tagline: string;
+  body: string;
+  stats: Array<[string, string]>;
+}> = [
   {
-    index: '01', phase: 'Acquire', name: 'Radar', tone: 'radar',
-    visualLabel: 'Buyer qualification field',
-    thesis: 'Find demand before demand finds us.',
-    description: 'Demand intelligence that identifies, verifies, scores, and prioritizes high-value buyers—then points the team toward the next best action.',
-    proof: ['Buyer, not supplier, targeting', 'Evidence-backed fit scoring', 'Model-agnostic intelligence'],
+    id: 'radar', type: 'radar', number: '01', phase: 'Acquire · Demand intelligence', name: 'Tequila Town Radar',
+    tagline: 'Find demand before demand finds us.',
+    body: 'Radar finds people and groups that are likely to book. It checks each lead, ranks the best ones, and tells the sales team who to call first.',
+    stats: [['94', 'TOP FIT'], ['142', 'VERIFIED'], ['+38', 'THIS WEEK']],
   },
   {
-    index: '02', phase: 'Experience', name: 'Tequila Town App', tone: 'app',
-    visualLabel: 'Guest journey map',
-    thesis: 'Turn attendance into participation.',
-    description: 'A digital companion for tickets, wayfinding, missions, passport progression, recommendations, rewards, and a measurable guest journey.',
-    proof: ['Ticket-to-profile connection', 'Journey and mission guidance', 'Participation intelligence'],
+    id: 'app-layer', type: 'app', number: '02', phase: 'Experience · Guest intelligence', name: 'Tequila Town App',
+    tagline: 'Turn attendance into participation.',
+    body: 'The App helps guests before, during, and after their visit. It holds tickets, gives directions, unlocks games and rewards, and learns what each guest likes.',
+    stats: [['71%', 'ENGAGED'], ['03', 'LIVE MISSIONS'], ['LVL 4', 'PASSPORT']],
   },
   {
-    index: '03', phase: 'Operate', name: 'Agent Swarm', tone: 'swarm',
-    visualLabel: 'Mission routing lattice',
-    thesis: 'Give the operation a digital workforce.',
-    description: 'One orchestrator routes missions across specialist agents for guest service, commerce, operations, sponsors, analytics, and creative execution.',
-    proof: ['Coordinated mission routing', 'Specialist execution', 'Human approval and visibility'],
+    id: 'swarm', type: 'swarm', number: '03', phase: 'Operate · Digital workforce', name: 'Agent Swarm',
+    tagline: 'Give every job to the right helper.',
+    body: 'The Swarm is a team of 21 AI helpers. One boss agent sends each job to the right specialist, checks the work, and keeps people in control.',
+    stats: [['21', 'SPECIALISTS'], ['07', 'MISSIONS'], ['92%', 'CAPACITY']],
   },
   {
-    index: '04', phase: 'Control', name: 'Control Center', tone: 'control',
-    visualLabel: 'Live operating picture',
-    thesis: 'See the whole business at once.',
-    description: 'One prioritized operating picture for demand, sales, guests, operations, sponsors, marketing, and AI activity.',
-    proof: ['Decision-first daily brief', 'Cross-system attention queue', 'Recommended next actions'],
+    id: 'control', type: 'control', number: '04', phase: 'Decide · Executive intelligence', name: 'Control Center',
+    tagline: 'See the whole business at once.',
+    body: 'Control Center puts the whole business on one screen. It shows what changed, what needs attention, and the three things leaders should do next.',
+    stats: [['18.4%', 'MOMENTUM'], ['03', 'PRIORITIES'], ['LIVE', 'STATE']],
   },
 ];
 
-function Glyph({ type }: { type: string }) {
-  const paths: Record<string, React.ReactNode> = {
-    radar: <><path d="M8 36A28 28 0 1 1 36 64"/><path d="M36 36 58 14"/><circle cx="36" cy="36" r="7"/><path d="M12 36h8M52 36h8"/></>,
-    app: <><path d="M19 8h34v56H19z"/><path d="M28 20c13-8 20 6 10 13-10 7-2 17 8 12"/><circle cx="46" cy="45" r="5"/><path d="M29 55h14"/></>,
-    swarm: <><circle cx="36" cy="36" r="8"/><path d="M36 28V10M42 31l15-10M44 39l17 8M36 44v18M29 40l-17 9M29 31 14 20"/><circle cx="36" cy="8" r="3"/><circle cx="60" cy="19" r="3"/><circle cx="64" cy="49" r="3"/><circle cx="36" cy="64" r="3"/><circle cx="10" cy="51" r="3"/><circle cx="11" cy="18" r="3"/></>,
-    control: <><path d="M10 18h18v18H10zM44 18h18v18H44zM10 45h18v11H10zM44 45h18v11H44z"/><path d="M27 27h18M36 27v18"/><circle cx="36" cy="36" r="5"/></>,
-  };
-  return <svg className="glyph" viewBox="0 0 72 72" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">{paths[type]}</svg>;
+function InstrumentOverlay({ type }: { type: ProductType }) {
+  if (type === 'radar') return <div className="instrument-overlay lead-overlay"><small>VERIFIED BUYERS</small><div><span>Corporate offsite · 120</span><b>94</b></div><div><span>Luxury concierge channel</span><b>89</b></div><div><span>Private members club</span><b>86</b></div></div>;
+  if (type === 'app') return <div className="instrument-overlay guest-overlay"><small>GUEST STATE</small><b>ANONYMOUS → KNOWN</b><span>Sofia · VIP intent · Reposado profile</span><div><i/><i/><i/><i/></div></div>;
+  if (type === 'swarm') return <div className="instrument-overlay mission-overlay"><small>MISSION ROUTER</small><div><i/> VIP guest recovery <b>74%</b></div><div><i/> Sponsor recap <b>46%</b></div><div><i/> Staffing check <b>88%</b></div></div>;
+  return <div className="instrument-overlay attention-overlay"><small>ATTENTION QUEUE</small><div><b>01</b><span>VIP conversion opportunity</span></div><div><b>02</b><span>Concierge demand surge</span></div><div><b>03</b><span>Peak-hour pinch point</span></div></div>;
 }
 
 export default function Home() {
-  return (
-    <main>
-      <ExperienceController />
-      <a className="skip-link" href="#platform">Skip to the platform</a>
-      <header className="site-nav">
-        <a className="brand brand-image" href="#top" aria-label="Tequila Town Tech home">
-          <img src="/brand/tequila-town-tech-horizontal.png" alt="Tequila Town Tech" width="1803" height="407" fetchPriority="high" decoding="async" />
-        </a>
-        <nav aria-label="Primary navigation">
-          <a href="#platform">Platform</a><a href="#products">Products</a><a href="#flywheel">Flywheel</a><a href="#roadmap">Build plan</a>
-        </nav>
-        <a className="nav-cta" href="#products">Enter system <span aria-hidden="true">↘</span></a>
-        <details className="mobile-menu"><summary aria-label="Open navigation"><span/><span/></summary><nav><a href="#platform">Platform</a><a href="#products">Products</a><a href="#flywheel">Flywheel</a><a href="#roadmap">Build plan</a></nav></details>
-      </header>
+  return <main>
+    <ExperienceV6 />
+    <FlightStage />
+    <a className="skip-link" href="#system">Skip to the system</a>
 
-      <section className="hero" id="top" aria-labelledby="hero-title">
-        <SignalEngine />
-        <div className="hero-vignette" aria-hidden="true" />
-        <div className="hero-copy" data-reveal>
-          <p className="hero-brandline"><span>TEQUILA TOWN</span><b>TECH</b></p>
-          <p className="eyebrow"><span>Real-world experience intelligence</span><span>System / 01—04</span></p>
-          <h1 id="hero-title">The experience is physical.<br/><em>The multiplier is digital.</em></h1>
-          <p className="hero-lede">Tequila Town is building a coordinated technology operating system around how it finds demand, engages guests, runs the operation, and sees the whole business.</p>
-          <a className="primary-link" href="#platform">Enter the operating system <span aria-hidden="true">↓</span></a>
+    <div className="intro-wipe" aria-hidden="true"><img src="/brand/tequila-town-tech-horizontal.png" alt="" /></div>
+
+    <header className="site-nav">
+      <a className="brand-image" href="#top" aria-label="Tequila Town Tech home"><img src="/brand/tequila-town-tech-horizontal.png" alt="Tequila Town Tech" width="1803" height="407" fetchPriority="high" /></a>
+      <nav aria-label="Primary navigation"><a href="#system">System</a><a href="#flywheel">Flywheel</a><a href="#command">Command</a><a href="#build">Build plan</a></nav>
+      <a className="nav-cta mag" href="#value">Investor case <span>↗</span></a>
+      <details className="mobile-menu"><summary aria-label="Open navigation"><span/><span/></summary><nav><a href="#system">System</a><a href="#flywheel">Flywheel</a><a href="#command">Command</a><a href="#build">Build plan</a></nav></details>
+    </header>
+
+    <nav className="chapter-rail" aria-label="Story chapters"><span className="rail-track"><i/></span>{['top','shift','system','radar','app-layer','swarm','control','flywheel','command','build','value','thesis'].map((id, index) => <a key={id} href={`#${id}`} aria-label={`Chapter ${index + 1}`}><span>{String(index).padStart(2,'0')}</span></a>)}</nav>
+
+    <section className="hero" id="top" data-scene="top" aria-labelledby="hero-title">
+      <div className="hero-vignette" aria-hidden="true" />
+      <div className="hero-copy" data-reveal>
+        <p className="brandline"><span>TEQUILA TOWN</span><b>TECH / SYSTEM ONLINE</b></p>
+        <p className="eyebrow"><span>Investor technology experience</span><span>25.7617° N / 80.1918° W</span></p>
+        <h1 id="hero-title">The venue is<br/>the experience.<br/><em>The system compounds it.</em></h1>
+        <p className="hero-lede">Four smart tools work together. They find customers, guide guests, get work done, and show leaders what matters next.</p>
+        <div className="hero-actions"><a className="primary-link mag" href="#shift">Enter the system <span>→</span></a><a className="secondary-link" href="#build">What capital unlocks</a></div>
+      </div>
+      <div className="hero-console" aria-hidden="true"><span>SYS/TTT-04</span><b>FOUR SYSTEMS · ONE LOOP</b><i>LIVE SIGNAL</i></div>
+      <div className="ticker" aria-hidden="true"><div>{['RADAR · 142 VERIFIED BUYERS','APP · 71% PARTICIPATION','SWARM · 21 SPECIALISTS','CONTROL · 03 PRIORITIES','SYSTEM · COMPOUNDING'].concat(['RADAR · 142 VERIFIED BUYERS','APP · 71% PARTICIPATION','SWARM · 21 SPECIALISTS']).map((item,index)=><span key={`${item}-${index}`}>{item}</span>)}</div></div>
+      <div className="hero-proof"><span><b>04</b> coordinated layers</span><span><b>21</b> specialist agents</span><span><b>01</b> compounding loop</span></div>
+    </section>
+
+    <section className="shift" id="shift" data-scene="shift">
+      <div className="shift-sticky"><AgaveField /><div className="shift-statements">
+        <article data-reveal><span>01 · THE BIG IDEA</span><h2>A full room is great.<br/><em>Knowing your guests is better.</em></h2></article>
+        <article data-reveal><span>02 · WHAT WE LEARN</span><h2>Every search, visit, choice, and game teaches the system something useful.</h2></article>
+        <article data-reveal><span>03 · HOW IT WORKS</span><h2>Four simple tools share what they learn.<br/><em>Each one makes the others smarter.</em></h2></article>
+      </div><div className="agave-caption"><i/> AGAVE / GROWN FROM SIGNAL / LIVE VOXEL FIELD</div></div>
+    </section>
+
+    <section className="system-intro" id="system" data-scene="system">
+      <header data-reveal><span className="section-index">02 / THE SYSTEM</span><h2>Four tools.<br/><em>One smart team.</em></h2><p>Each tool does one clear job. They share what they learn, so the whole business gets smarter every day.</p></header>
+      <div className="system-strip">{products.map(product => <a href={`#${product.id}`} key={product.id} data-reveal style={{'--tone': `var(--${product.type})`} as React.CSSProperties}><span>{product.number}</span><small>{product.phase.split(' · ')[0]}</small><b>{product.type === 'app' ? 'APP' : product.type.toUpperCase()}</b><i>↘</i></a>)}</div>
+    </section>
+
+    {products.map((product, index) => <section className={`product-chapter product-${product.type}`} id={product.id} data-scene={product.id} key={product.id}>
+      <div className="product-shell">
+        <div className="product-copy" data-reveal>
+          <div className="product-phase"><i/><span>{product.number}</span>{product.phase}</div>
+          <h2>{product.name}</h2><h3>{product.tagline}</h3><p>{product.body}</p>
+          <div className="product-stats">{product.stats.map(([value,label]) => <div key={label}><b>{value}</b><small>{label}</small></div>)}</div>
+          <div className="product-pagination"><span>{String(index + 1).padStart(2,'0')} / 04</span><i/></div>
         </div>
-        <div className="hero-proof"><span><b>04</b> coordinated layers</span><span><b>01</b> shared architecture</span><span><b>NOW</b> working foundations</span></div>
-      </section>
+        <div className="product-instrument" data-reveal><ProductEngine type={product.type}/><InstrumentOverlay type={product.type}/></div>
+      </div>
+      <span className="chapter-number" aria-hidden="true">{product.number}</span>
+    </section>)}
 
-      <section className="platform" id="platform">
-        <div className="section-index">01 / Platform premise</div>
-        <div className="platform-copy" data-reveal>
-          <p>Tequila Town is more than a venue.</p>
-          <h2>The physical experience creates the signal.<br/><em>Tequila Town Tech turns it into leverage.</em></h2>
-          <div className="platform-detail"><p>Acquisition, guest behavior, operations, and executive decisions are usually fragmented. The platform connects them into one learning system designed around the reality of a live experiential business.</p><p>The venue remains the attraction. Technology makes every cycle more intelligible, more coordinated, and increasingly repeatable.</p></div>
+    <section className="flywheel" id="flywheel" data-scene="flywheel">
+      <div className="flywheel-sticky">
+        <div className="fly-copy" data-reveal><span className="section-index">07 / THE LOOP</span><h2>Every tool<br/><em>helps the next.</em></h2><p>Radar finds the right people. The App learns what guests enjoy. The Swarm gets jobs done. Control Center helps leaders make the next call.</p>
+          <div className="fly-steps">{['Radar finds people who may book.','The App learns what guests like.','The Swarm turns ideas into work.','Control Center shows what to do next.'].map((step,index)=><div key={step}><span>0{index+1}</span><b>{step}</b></div>)}</div>
         </div>
-        <div className="word-crop" aria-hidden="true"><span>TEQUILA</span><span>TOWN</span></div>
-      </section>
+        <div className="fly-visual" data-reveal><FlywheelEngine/><div className="velocity"><small>CYCLE VELOCITY</small><span><i/></span><b>× 4.6</b></div></div>
+      </div>
+    </section>
 
-      <section className="products" id="products">
-        <header className="section-head" data-reveal><div><span className="section-index">02 / Product architecture</span><h2>Four products.<br/><em>One operating system.</em></h2></div><p>Each layer does a distinct job. Their value compounds when signals move between them.</p></header>
-        <div className="product-stack">
-          {products.map((product) => (
-            <article className={`product-card ${product.tone}`} key={product.tone} data-reveal>
-              <div className="product-copy">
-                <div className="product-meta"><span>{product.index}</span><span>{product.phase}</span><Glyph type={product.tone}/></div>
-                <p className="product-overline">Tequila Town</p><h3>{product.name}</h3><h4>{product.thesis}</h4><p>{product.description}</p>
-                <ul>{product.proof.map(item => <li key={item}>{item}</li>)}</ul>
-              </div>
-              <div className="product-visual"><div className="illustrative">{product.visualLabel}</div><ProductEngine type={product.tone as 'radar'|'app'|'swarm'|'control'}/></div>
-            </article>
-          ))}
+    <section className="command" id="command" data-scene="command">
+      <header data-reveal><span className="section-index">08 / THE CONTROL ROOM</span><h2>Answers first.<br/><em>Charts second.</em></h2><p>Leaders should not hunt through ten screens. They should ask one question and get a clear answer.</p></header>
+      <div className="executive-query" data-reveal><span><i/> EXECUTIVE QUERY / LIVE</span><strong data-question>What requires attention today?</strong><b>ASK THE SYSTEM →</b></div>
+      <div className="command-center" data-reveal>
+        <header><span>TEQUILA TOWN TECH / CONTROL</span><i>LIVE OPERATING PICTURE</i></header>
+        <aside><b>TODAY</b>{['Sales & Tickets','Radar','Guest Intelligence','Operations','Sponsors','Marketing','Agent Swarm'].map(item=><span key={item}>{item}</span>)}</aside>
+        <div className="command-main">
+          <div className="kpi-card"><small>TICKET MOMENTUM</small><b>↑ 18.4%</b><div className="spark-bars">{[28,42,36,54,49,68,74,91].map((height,index)=><i style={{height:`${height}%`}} key={index}/>)}</div></div>
+          <div className="kpi-card"><small>QUALIFIED BUYERS</small><b>142</b><em>+38 THIS WEEK</em></div>
+          <div className="kpi-card"><small>GUEST PARTICIPATION</small><b>71%</b><div className="ring-meter"><i/></div></div>
+          <div className="priority-card"><small>ATTENTION QUEUE / PRIORITIZED</small>{[['01','VIP conversion opportunity','High-intent group demand is outrunning visible premium inventory.'],['02','Concierge channel surge','Verified buyers are clustering around one geography.'],['03','Evening service pinch point','Schedule density predicts a peak-hour bottleneck.']].map(([no,title,text])=><div key={no}><b>{no}</b><span><strong>{title}</strong><p>{text}</p></span><i>→</i></div>)}</div>
+          <div className="agent-card"><small>AGENT ACTIVITY</small><b>21 specialists</b><div>{Array.from({length:18},(_,i)=><i className={i%3===0||i%7===0?'hot':''} key={i}/>)}</div></div>
         </div>
-      </section>
+      </div>
+    </section>
 
-      <section className="flywheel" id="flywheel" data-step="0">
-        <div className="flywheel-sticky">
-          <div className="fly-copy">
-            <span className="section-index">03 / Compounding intelligence</span>
-            <h2>One signal.<br/><em>Four transformations.</em></h2>
-            <div className="fly-steps">
-              <article><span>01</span><div><b>Radar qualifies demand.</b><p>The system begins with evidence-backed opportunity.</p></div></article>
-              <article><span>02</span><div><b>The App creates participation data.</b><p>Anonymous attendance becomes a known journey.</p></div></article>
-              <article><span>03</span><div><b>The Swarm converts signals into action.</b><p>One mission routes to the right specialists.</p></div></article>
-              <article><span>04</span><div><b>Control improves the next cycle.</b><p>Results return as prioritized management intelligence.</p></div></article>
-            </div>
-          </div>
-          <FlywheelEngine />
-        </div>
-      </section>
+    <section className="build" id="build" data-scene="build"><header data-reveal><span className="section-index">09 / WHAT THE MONEY BUILDS</span><h2>Working tools today.<br/><em>One full system next.</em></h2><p>The first pieces already work. New funding connects them, makes them safe, and gets them ready for real guests and real business.</p></header><div className="build-grid">{[
+      ['NOW','01','Four working tools','The main pieces already exist and prove the idea.','PRODUCTS / DESIGN / PROOF'],
+      ['NEXT','02','Connect everything','Link the tools to tickets, customers, staff, and live business data.','DATA / SAFETY / TESTING'],
+      ['SCALE','03','Learn and improve','Use what the system learns to make every new event better than the last.','LEARNING / SPEED / GROWTH'],
+    ].map(([stage,no,title,text,meta])=><article data-reveal key={stage}><span>{stage} / {no}</span><h3>{title}</h3><p>{text}</p><i>{meta}</i></article>)}</div></section>
 
-      <section className="command" id="command">
-        <div className="command-plate" aria-hidden="true"/>
-        <div className="command-copy" data-reveal><span className="section-index">04 / Executive intelligence</span><h2>The command layer is not more dashboards.</h2><p>It is one place that answers the questions leadership actually has: What changed? What matters? Where is revenue moving? What should happen next?</p></div>
-        <div className="command-console" data-reveal>
-          <header><span><i/> TEQUILA TOWN TECH / CONTROL</span><b>EXECUTIVE BRIEF · TODAY</b></header>
-          <div className="console-grid">
-            <div className="console-main"><small>PRIORITY QUESTION</small><h3>What requires attention today?</h3><div className="priority"><span>01</span><div><b>Qualified group demand requires faster follow-up.</b><p>Radar has surfaced a cluster of high-fit opportunities. Current sales capacity is the constraint, not demand.</p></div></div><div className="recommend"><small>RECOMMENDED NEXT ACTION</small><p>Route the highest-fit accounts into an approval-ready outreach mission.</p></div></div>
-            <aside><div><small>SYSTEM SIGNALS</small><p><i className="l1"/>Radar <b>Opportunity</b></p><p><i className="l2"/>App <b>Participation</b></p><p><i className="l3"/>Swarm <b>Capacity</b></p></div><div><small>OPERATING STATE</small><strong>Connected view</strong><span>Working foundation → production integration</span></div></aside>
-          </div>
-        </div>
-      </section>
+    <section className="value" id="value" data-scene="value"><header data-reveal><span className="section-index">10 / WHY IT MATTERS</span><h2>A better guest experience.<br/><em>A smarter business.</em></h2><p>The venue creates the fun. The system helps Tequila Town learn from it, improve it, and grow it.</p></header><div className="value-grid">{[
+      ['01','More bookings','Find the best customers and help the sales team reach them first.'],['02','Happier guests','Learn what people enjoy and make each visit feel more personal.'],['03','Less busywork','Let AI helpers handle repeat jobs while people stay in control.'],['04','Better sponsor results','Show partners what guests saw, touched, and enjoyed.'],['05','Clearer decisions','Put the most important facts and next steps in one place.'],['06','A system that can grow','Use the same playbook for more events, cities, and experiences.'],
+    ].map(([no,title,text])=><article data-reveal key={no}><span>{no}</span><h3>{title}</h3><p>{text}</p><i>↗</i></article>)}</div></section>
 
-      <section className="roadmap" id="roadmap">
-        <header className="section-head" data-reveal><div><span className="section-index">05 / Investment build plan</span><h2>Foundation today.<br/><em>Integrated platform next.</em></h2></div><p>Investment turns existing product foundations into a connected, secure, production-grade operating system.</p></header>
-        <div className="roadmap-grid">
-          <article data-reveal><span>NOW / 01</span><h3>Working product foundations</h3><p>Guest application, demand intelligence, multi-agent operations, and control-center architecture already establish the four-layer direction.</p><i>Existing foundation</i></article>
-          <article data-reveal><span>NEXT / 02</span><h3>Production integration</h3><p>Connect live ticketing, CRM, guest, sponsor, marketing, and operational data with authentication, permissions, persistence, monitoring, and governance.</p><i>Capital deployment</i></article>
-          <article data-reveal><span>SCALE / 03</span><h3>Compounding intelligence</h3><p>Shared production signals improve targeting, personalization, execution, sponsor visibility, forecasting, and the decisions leadership makes next.</p><i>Platform potential</i></article>
-        </div>
-      </section>
+    <section className="thesis" id="thesis" data-scene="thesis"><div className="thesis-glow"/><span className="section-index">THE THESIS / 2026</span><h2 data-reveal>One system.<br/>Four layers.<br/><em>Compounding intelligence.</em></h2><p data-reveal>The venue creates the signal.<br/>Tequila Town Tech turns it into leverage.</p><a className="primary-link mag" href="#top">Return to origin <span>↑</span></a><img className="thesis-badge" src="/brand/tequila-town-tech-badge.png" alt="Tequila Town Tech" width="1024" height="1024" loading="lazy" /></section>
 
-      <section className="value">
-        <span className="section-index">06 / Why the technology matters</span>
-        <div className="value-grid">
-          <h2 data-reveal>Technology becomes a multiplier on the experience.</h2>
-          {['Revenue intelligence|See and prioritize high-value demand earlier.','Guest intelligence|Turn physical attendance into measurable participation.','Operational leverage|Coordinate repetitive, analytical, and creative work.','Executive visibility|Replace fragmented tools with one prioritized operating picture.'].map((item,i)=>{const [title,text]=item.split('|');return <article key={title} data-reveal><span>0{i+1}</span><h3>{title}</h3><p>{text}</p></article>})}
-        </div>
-      </section>
-
-      <section className="closing">
-        <div className="closing-signal" aria-hidden="true"/><p>The venue is the experience.</p><h2>The technology is<br/><em>the multiplier.</em></h2><a href="#top">Return to the system <span>↑</span></a>
-        <img className="closing-brand" src="/brand/tequila-town-tech-badge.png" alt="Tequila Town Tech" width="1024" height="1024" loading="lazy" decoding="async" />
-      </section>
-      <footer><span className="footer-brand"><img src="/brand/tequila-town-tech-horizontal.png" alt="Tequila Town Tech" width="1803" height="407" loading="lazy" decoding="async" /><small>© 2026</small></span><span>Experience intelligence platform</span><span>Built around the physical experience</span></footer>
-    </main>
-  );
+    <footer><span className="footer-brand"><img src="/brand/tequila-town-tech-horizontal.png" alt="Tequila Town Tech" width="1803" height="407" loading="lazy"/><small>© 2026</small></span><span>THE EXPERIENCE OPERATING SYSTEM</span><span>MIAMI / FLORIDA / LIVE SIGNAL</span></footer>
+  </main>;
 }
