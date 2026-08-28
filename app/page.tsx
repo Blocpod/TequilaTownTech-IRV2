@@ -27,7 +27,7 @@ export default function Home(){return <main>
 
   <section className="culture" data-culture aria-labelledby="culture-title">
     <div className="culture-stage">
-      <img className="culture-kvi" src="/culture/flower-car.webp" alt="" width="1500" height="900" loading="lazy"/>
+      <div className="culture-field" aria-hidden="true"><i/><i/><i/></div>
       <div className="culture-cast" aria-hidden="true">
         <img className="culture-mariachi" src="/culture/mariachi.webp" alt="" width="660" height="800" loading="lazy"/>
         <img className="culture-bartender" src="/culture/bartender.webp" alt="" width="572" height="850" loading="lazy"/>

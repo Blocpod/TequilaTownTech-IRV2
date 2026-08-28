@@ -29,7 +29,7 @@ export default function FreshExperience(){
           : Math.min(1,Math.max(0,-rect.top/travel));
         if(Math.abs(cultureProgress-lastCultureProgress)>.001){
           lastCultureProgress=cultureProgress;
-          culture.style.setProperty('--culture-car-x',`${(cultureProgress-.5)*-8}vw`);
+          culture.style.setProperty('--culture-field-x',`${(cultureProgress-.5)*-5}vw`);
           culture.style.setProperty('--culture-copy-y',`${(cultureProgress-.5)*-7}vh`);
           culture.style.setProperty('--culture-mariachi-y',`${(1-cultureProgress)*18}vh`);
           culture.style.setProperty('--culture-bartender-y',`${(1-cultureProgress)*13}vh`);
