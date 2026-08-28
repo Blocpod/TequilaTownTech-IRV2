@@ -25,6 +25,23 @@ export default function Home(){return <main>
     ['01','FILL THE ROOMS','Radar finds real buyers.'],['02','GUIDE THE NIGHT','The App turns visits into journeys.'],['03','MOVE THE WORK','The Swarm brings in the right digital team.'],['04','MAKE THE CALL','Control Center shows the next three moves.'],
   ].map(([no,verb,text])=><article data-reveal key={no}><span>{no}</span><b>{verb}</b><p>{text}</p><i>↘</i></article>)}</div></section>
 
+  <section className="culture" data-culture aria-labelledby="culture-title">
+    <div className="culture-stage">
+      <img className="culture-kvi" src="/culture/flower-car.webp" alt="" width="1500" height="900" loading="lazy"/>
+      <div className="culture-cast" aria-hidden="true">
+        <img className="culture-mariachi" src="/culture/mariachi.webp" alt="" width="660" height="800" loading="lazy"/>
+        <img className="culture-bartender" src="/culture/bartender.webp" alt="" width="572" height="850" loading="lazy"/>
+        <img className="culture-dancer" src="/culture/dancer.webp" alt="" width="673" height="900" loading="lazy"/>
+      </div>
+      <div className="culture-copy">
+        <span>TECHNOLOGY SHOULD NEVER STEAL THE SHOW</span>
+        <h2 id="culture-title">THE TOOLS WORK<br/><em>BACKSTAGE.</em><br/>THE MAGIC STAYS<br/><em>HUMAN.</em></h2>
+        <p>Guests should feel the music, the people, and the place—not the software. The system handles the busy work so the team can make the night unforgettable.</p>
+      </div>
+      <div className="culture-ticker" aria-hidden="true"><span>FIND THE PEOPLE</span><i>✦</i><span>GUIDE THE NIGHT</span><i>✦</i><span>HELP THE TEAM</span><i>✦</i><span>MAKE THE CALL</span></div>
+    </div>
+  </section>
+
   <section className="world product-world radar-world" id="radar" data-story-section><div className="world-copy" data-reveal><span className="world-no">01 / ACQUIRE / TEQUILA TOWN RADAR</span><h2>FIND REAL BUYERS.<br/><em>PROVE THE FIT.</em></h2><p>Radar searches for people and groups likely to book. It checks the proof, scores the fit, and shows sales who to call first.</p><ul><li>Four buyer search modes</li><li>Real public source proof</li><li>Five-part fit score</li><li>Outreach ready for a person to review</li></ul></div><div className="world-machine product-machine" data-reveal><RadarStory/></div></section>
 
   <section className="world product-world app-world" id="app" data-story-section><div className="world-copy" data-reveal><span className="world-no">02 / EXPERIENCE / TEQUILA TOWN APP</span><h2>TURN A TICKET<br/><em>INTO A JOURNEY.</em></h2><p>The App guides each guest from entry to discovery, missions, rewards, and a better next stop.</p><ul><li>Claim a ticket and enter</li><li>Discover rooms and missions</li><li>Scan, complete, and earn</li><li>Make the next visit more personal</li></ul></div><div className="world-machine product-machine" data-reveal><AppStory/></div></section>
