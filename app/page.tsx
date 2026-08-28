@@ -6,7 +6,6 @@ import { AppStory, ControlStory, OperatingLoopStory, RadarStory, SwarmStory } fr
 export default function Home(){return <main>
   <FreshExperience/>
   <a className="skip-link" href="#jobs">Skip to the story</a>
-  <div className="load-gate" aria-hidden="true"><img src="/brand/tequila-town-tech-horizontal.webp" alt=""/><i/></div>
   <div className="read-progress" aria-hidden="true"><i/></div>
 
   <header className="topbar">
@@ -17,13 +16,13 @@ export default function Home(){return <main>
   </header>
 
   <section className="fresh-hero" id="top" aria-labelledby="hero-title">
-    <div className="fresh-copy" data-reveal><p className="fresh-kicker">THE OPERATING SYSTEM FOR TEQUILA TOWN</p><h1 id="hero-title">ONE EXPERIENCE.<br/>FOUR SYSTEMS.<br/><em>ONE SMARTER LOOP.</em></h1><p>Radar finds demand. The App guides guests. The Swarm helps the team. Control Center shows what to do next.</p><div className="fresh-actions"><a className="fresh-primary mag" href="#jobs">WATCH THE SYSTEM WORK <span>↘</span></a><span>SCROLL TO MOVE EACH WORKFLOW</span></div></div>
+    <div className="fresh-copy" data-reveal><p className="fresh-kicker">TEQUILA TOWN TECHNOLOGY</p><h1 id="hero-title">A GREAT NIGHT.<br/><em>A SMARTER BUSINESS.</em></h1><p>Four tools find buyers, guide guests, help the team, and show what to do next.</p><div className="fresh-actions"><a className="fresh-primary mag" href="#jobs">SEE HOW IT WORKS <span>↘</span></a><span>SCROLL TO BUILD THE STORY</span></div></div>
     <div className="fresh-machine"><HeroSpecimen/><div className="machine-tags"><span>01 / ACQUIRE</span><span>02 / EXPERIENCE</span><span>03 / OPERATE</span><span>04 / CONTROL</span></div></div>
     <div className="fresh-foot"><span>FOUR REAL PRODUCTS</span><b>ONE CONNECTED TECHNOLOGY PLATFORM</b><i>MIAMI / 2026</i></div>
   </section>
 
-  <section className="jobs" id="jobs"><header data-reveal><span>THE WHOLE SYSTEM / IN PLAIN ENGLISH</span><h2>FOUR LAYERS.<br/><em>ONE LOOP.</em></h2></header><div className="job-grid">{[
-    ['01','ACQUIRE','Radar finds real buyers.'],['02','EXPERIENCE','The App turns visits into journeys.'],['03','OPERATE','The Swarm routes work.'],['04','CONTROL','Control Center ranks the next move.'],
+  <section className="jobs" id="jobs"><header data-reveal><span>THE WHOLE SYSTEM / IN ONE SENTENCE EACH</span><h2>FOUR JOBS.<br/><em>NO GUESSING.</em></h2></header><div className="job-grid">{[
+    ['01','FILL THE ROOMS','Radar finds real buyers.'],['02','GUIDE THE NIGHT','The App turns visits into journeys.'],['03','MOVE THE WORK','The Swarm brings in the right digital team.'],['04','MAKE THE CALL','Control Center shows the next three moves.'],
   ].map(([no,verb,text])=><article data-reveal key={no}><span>{no}</span><b>{verb}</b><p>{text}</p><i>↘</i></article>)}</div></section>
 
   <section className="world product-world radar-world" id="radar" data-story-section><div className="world-copy" data-reveal><span className="world-no">01 / ACQUIRE / TEQUILA TOWN RADAR</span><h2>FIND REAL BUYERS.<br/><em>PROVE THE FIT.</em></h2><p>Radar searches for people and groups likely to book. It checks the proof, scores the fit, and shows sales who to call first.</p><ul><li>Four buyer search modes</li><li>Real public source proof</li><li>Five-part fit score</li><li>Outreach ready for a person to review</li></ul></div><div className="world-machine product-machine" data-reveal><RadarStory/></div></section>
@@ -34,12 +33,12 @@ export default function Home(){return <main>
 
   <section className="world product-world control-world" id="control" data-story-section><div className="world-copy" data-reveal><span className="world-no">04 / CONTROL / TEQUILA TOWN CONTROL CENTER</span><h2>MANY SIGNALS.<br/><em>THREE CLEAR MOVES.</em></h2><p>Control Center is built to collect many sources, check what is real, rank what matters, and turn it into a short daily brief.</p><ul><li>Collect from many sources</li><li>Reject noise and repeats</li><li>Rank facts by impact</li><li>Turn intelligence into action</li></ul></div><div className="world-machine product-machine" data-reveal><ControlStory/></div></section>
 
-  <section className="loop" id="loop" data-story-section><header data-reveal><span>HOW THE FOUR PRODUCTS BECOME ONE SYSTEM</span><h2>EACH PRODUCT GIVES<br/><em>THE NEXT ONE BETTER SIGNALS.</em></h2><p>Then Control Center sends the best next move back to Radar. The loop starts again with better information.</p></header><OperatingLoopStory/></section>
+  <section className="loop" id="loop" data-story-section><header data-reveal><span>HOW THE FOUR PRODUCTS BECOME ONE SYSTEM</span><h2>EVERY NIGHT MAKES<br/><em>THE NEXT ONE BETTER.</em></h2><p>Each tool gives the next tool something useful. Then the loop starts again with better information.</p></header><OperatingLoopStory/></section>
 
-  <section className="build" id="build"><header data-reveal><span>WHAT THE MONEY BUILDS</span><h2>FOUR PRODUCTS EXIST.<br/><em>NOW CONNECT THE TRUTH.</em></h2><p>Funding connects the real systems behind tickets, guests, sales, sponsors, staff, and decisions.</p></header><div className="build-steps">{[
+  <section className="build" id="build"><header data-reveal><span>WHAT THE MONEY BUILDS</span><h2>THE PRODUCTS WORK.<br/><em>NOW MAKE THEM TALK.</em></h2><p>Funding connects the real systems behind tickets, guests, sales, sponsors, staff, and decisions.</p></header><div className="build-steps">{[
     ['NOW','Four working products','Real workflows already prove the idea.'],['NEXT','Real Tequila Town connections','Connect Tixr, CRM, Supabase, schedules, and sponsor data.'],['THEN','One learning loop','Make every event, mission, and sales cycle smarter.'],
   ].map(([stage,title,text],i)=><article data-reveal key={stage}><span>{stage} / 0{i+1}</span><h3>{title}</h3><p>{text}</p><div><i style={{width:`${(i+1)*33}%`}}/></div></article>)}</div></section>
 
-  <section className="end" id="end"><div data-reveal><span>THE SIMPLE TRUTH</span><h2>FOUR PRODUCTS.<br/>ONE PHYSICAL WORLD.<br/><em>ONE SERIOUS TECH PLATFORM.</em></h2><a className="end-link mag" href="#top">RUN THE LOOP AGAIN <i>↑</i></a></div><img src="/brand/tequila-town-tech-badge.webp" alt="Tequila Town Tech" width="1024" height="1024" loading="lazy"/></section>
+  <section className="end" id="end"><div data-reveal><span>THE SIMPLE TRUTH</span><h2>THE PARTY IS REAL.<br/>THE SYSTEM<br/><em>LEARNS.</em></h2><a className="end-link mag" href="#top">RUN THE STORY AGAIN <i>↑</i></a></div><img src="/brand/tequila-town-tech-badge.webp" alt="Tequila Town Tech" width="1024" height="1024" loading="lazy"/></section>
   <footer><span>© 2026 TEQUILA TOWN TECH</span><b>THE EXPERIENCE OPERATING SYSTEM</b><span>MIAMI / FLORIDA</span></footer>
 </main>}

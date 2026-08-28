@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState, type CSSProperties, type RefObject } from 'react';
+import { useEffect, useRef, useState, type CSSProperties, type ReactNode, type RefObject } from 'react';
 
 const clamp=(value:number,min=0,max=1)=>Math.min(max,Math.max(min,value));
 
@@ -23,12 +23,11 @@ function useStoryPhase(steps:number):[RefObject<HTMLDivElement|null>,number]{
         let progress=0;
         if(compact.matches){
           const rect=element.getBoundingClientRect();
-          const travel=rect.height+innerHeight*.32;
-          progress=clamp((innerHeight*.82-rect.top)/travel);
+          progress=clamp((innerHeight*.78-rect.top)/(rect.height+innerHeight*.45));
         }else{
           const rect=section.getBoundingClientRect();
-          const travel=Math.max(1,rect.height-innerHeight*.72);
-          progress=clamp((innerHeight*.2-rect.top)/travel);
+          const travel=Math.max(1,rect.height-innerHeight*.7);
+          progress=clamp((innerHeight*.18-rect.top)/travel);
         }
         setPhase(Math.min(steps-1,Math.floor(progress*steps)));
       });
@@ -50,185 +49,106 @@ function useStoryPhase(steps:number):[RefObject<HTMLDivElement|null>,number]{
   return[ref,phase];
 }
 
-function StoryProgress({labels,phase}:{labels:string[];phase:number}){
-  return <div className="story-progress">
-    <div><span>WORKFLOW DEMO</span><strong>{labels[phase]}</strong></div>
-    <div className="story-steps">{labels.map((label,index)=><span className={index===phase?'is-active':index<phase?'is-done':''} key={label}><i/>{label}</span>)}</div>
+function Theater({kind,labels,phase,caption,truth,children}:{kind:string;labels:string[];phase:number;caption:string;truth:string;children:ReactNode}){
+  return <div className={`story-theater ${kind}-theater`} data-phase={phase}>
+    <div className="theater-top">
+      <span>LIVE PRODUCT STORY</span>
+      <div><em>{String(phase+1).padStart(2,'0')} / {String(labels.length).padStart(2,'0')}</em><strong>{labels[phase]}</strong></div>
+      <div className="theater-dots" aria-hidden="true">{labels.map((label,index)=><i className={index<=phase?'on':''} key={label}/>)}</div>
+    </div>
+    <div className="theater-stage"><div className="scene-in" key={`${kind}-${phase}`}>{children}</div></div>
+    <div className="theater-foot"><p>{caption}</p><span>{truth}</span></div>
   </div>;
 }
 
-const radarSteps=['SEARCH','VERIFY','SCORE','PRIORITIZE','ACTIVATE'];
-const candidates=[
-  {name:'Shoreline Tech',kind:'CORPORATE BUYER',proof:'Team culture program',score:92,state:'keep'},
-  {name:'Harbor Event Hall',kind:'VENUE / SELLER',proof:'Sells event space',score:0,state:'reject'},
-  {name:'Meridian Members',kind:'PRIVATE CLUB',proof:'Runs member outings',score:86,state:'keep'},
-  {name:'South Coast Supply',kind:'EVENT SUPPLIER',proof:'Vendor, not buyer',score:0,state:'reject'},
+const radarSteps=['SEARCH','PROVE','SCORE','RANK','REACH OUT'];
+const radarCaptions=[
+  'Radar starts with one plain question: who is likely to book?',
+  'It checks public proof before a buyer moves forward.',
+  'Five fit signals become one score a sales person can understand.',
+  'The strongest buyer rises to the top of the list.',
+  'Radar prepares the first move. A person reviews it and sends it.',
 ];
 
 export function RadarStory(){
   const [ref,phase]=useStoryPhase(radarSteps.length);
-  const scores=[['AFFINITY',94],['CAPACITY',88],['INTENT',91],['PROXIMITY',96],['ACCESS',84]] as const;
-  return <div ref={ref} className="story-demo radar-story" data-phase={phase} role="img" aria-label="Radar searches for likely buyers, verifies source evidence, scores fit, ranks the best lead, and prepares outreach.">
-    <div aria-hidden="true">
-      <StoryProgress labels={radarSteps} phase={phase}/>
-      <div className="radar-workbench">
-        <div className="search-order">
-          <small>SEARCH ORDER / CORPORATE</small>
-          <b>Miami groups<br/>10–150 people</b>
-          <div className="mode-row"><span>HUNTER</span><span>CONCIERGE</span><span className="on">CORPORATE</span><span>PARTNER</span></div>
-          <div className="search-line"><i/><span>{phase===0?'Finding possible buyers…':phase===1?'Checking real source proof…':phase===2?'Scoring buyer fit…':phase===3?'Sorting best first…':'Building the first move…'}</span></div>
-        </div>
-
-        <div className="candidate-stack">{candidates.map((candidate,index)=>{
-          const rejected=phase>=1&&candidate.state==='reject';
-          const ranked=phase>=3&&candidate.state==='keep';
-          return <article className={`${rejected?'is-rejected ':''}${ranked?'is-ranked':''}`} key={candidate.name} style={{'--order':index} as CSSProperties}>
-            <span>{String(index+1).padStart(2,'0')}</span><div><b>{candidate.name}</b><small>{candidate.kind}</small></div>
-            <em>{rejected?'REJECT':phase>=1?'PROOF FOUND':'CHECK'}</em>
-          </article>;
-        })}</div>
-
-        <div className={`evidence-dossier ${phase>=1?'is-open':''}`}>
-          <header><span>SOURCE PROOF</span><b>VERIFIED</b></header>
-          <div className="proof-line"><i/><span>Public team page</span><b>MATCH</b></div>
-          <div className="proof-line"><i/><span>Past group outings</span><b>MATCH</b></div>
-          <div className="proof-line"><i/><span>Miami office</span><b>MATCH</b></div>
-          <p>“Employee culture and team events”</p>
-        </div>
-
-        <div className={`score-dossier ${phase>=2?'is-open':''}`}>
-          <header><span>FIVE-PART FIT</span><b>92 / 100</b></header>
-          {scores.map(([label,value])=><div className="score-row" key={label}><span>{label}</span><i><b style={{'--score':`${value}%`} as CSSProperties}/></i><em>{value}</em></div>)}
-        </div>
-
-        <div className={`activation-card ${phase>=4?'is-open':''}`}>
-          <small>NEXT ACTION / READY</small><b>Invite the people lead<br/>to a private team night.</b>
-          <div><span>EMAIL A</span><span>EMAIL B</span><span>LINKEDIN</span><span>CALL</span></div>
-          <em>PERSON REVIEWS + SENDS →</em>
-        </div>
-      </div>
-      <p className="truth-note">REAL PRODUCT FLOW / PUBLIC WEB EVIDENCE / A PERSON MAKES THE FINAL MOVE</p>
-    </div>
+  return <div ref={ref} role="img" aria-label="Radar searches for likely buyers, checks public proof, scores fit, ranks the best lead, and prepares outreach for a person to review.">
+    <Theater kind="radar" labels={radarSteps} phase={phase} caption={radarCaptions[phase]} truth="WORKING FLOW · PUBLIC WEB PROOF · HUMAN SEND">
+      {phase===0&&<div className="radar-search-scene"><div className="radar-rings"><i/><i/><i/><b/></div><div className="scene-statement"><small>MIAMI · CORPORATE GROUPS</small><strong>WHO IS READY<br/>TO BOOK?</strong><span>Searching real public sources…</span></div></div>}
+      {phase===1&&<div className="big-lead-card"><small>BUYER FOUND · PROOF CHECKED</small><h3>Shoreline<br/>Tech</h3><p>Miami company · 10–150 people</p><div className="proof-pills"><span>TEAM PAGE ✓</span><span>GROUP EVENTS ✓</span><span>MIAMI OFFICE ✓</span></div></div>}
+      {phase===2&&<div className="fit-score-scene"><div className="score-orb"><small>BUYER FIT</small><strong>92</strong><span>/ 100</span></div><div className="score-signals">{['Team match','Buying power','Booking intent','Near the venue','Easy to reach'].map((item,index)=><div key={item}><span>{item}</span><i><b style={{width:`${[94,88,91,96,84][index]}%`}}/></i></div>)}</div></div>}
+      {phase===3&&<div className="rank-scene"><small>BEST BUYERS · FIRST</small>{[['01','Shoreline Tech','92'],['02','Meridian Members','86'],['03','Palm House Group','79']].map(([rank,name,score])=><div key={rank}><span>{rank}</span><b>{name}</b><strong>{score}</strong></div>)}</div>}
+      {phase===4&&<div className="action-scene"><small>FIRST MOVE · READY TO REVIEW</small><strong>Invite the people lead<br/>to a private team night.</strong><div><span>EMAIL</span><span>LINKEDIN</span><span>CALL</span></div><p>PERSON CHECKS IT → PERSON SENDS IT</p></div>}
+    </Theater>
   </div>;
 }
 
-const journeySteps=['TICKET','ENTER','DISCOVER','PARTICIPATE','COMPLETE','EARN','PERSONALIZE'];
-const journeyCopy=[
-  ['TICKET CLAIMED','Entry is linked to the guest.'],
-  ['GATE OPEN','The visit begins.'],
-  ['AGAVE LAB FOUND','The map lights the next stop.'],
-  ['MISSION STARTED','Decode three agave aromas.'],
-  ['SCAN ACCEPTED','Every mission step is complete.'],
-  ['STAMP + 250 POINTS','The passport records the win.'],
-  ['NEXT: LA CAVA','A better route, based on the guest.'],
-] as const;
+const appSteps=['CLAIM','ENTER','EXPLORE','EARN','RETURN'];
+const appCaptions=[
+  'A guest claims a ticket and gets one clear place to begin.',
+  'The visit opens with a simple path through the venue.',
+  'Rooms become missions guests can finish together.',
+  'Every completed mission adds a stamp and points.',
+  'The next suggestion is shaped by what the guest enjoyed.',
+];
 
 export function AppStory(){
-  const [ref,phase]=useStoryPhase(journeySteps.length);
-  return <div ref={ref} className="story-demo app-story" data-phase={phase} role="img" aria-label="The App turns a claimed ticket into entry, discovery, a mission, a passport stamp, points, and a personalized next stop.">
-    <div aria-hidden="true">
-      <StoryProgress labels={journeySteps} phase={phase}/>
-      <div className="journey-board">
-        <div className="guest-ticket">
-          <small>ADMIT ONE / JOURNEY PASS</small><b>SOFIA R.</b><span>TT–26–0417</span><i className={phase>=0?'is-stamped':''}>CLAIMED</i>
-        </div>
-        <div className="venue-route">
-          <div className="route-line"><i style={{'--route':`${phase/6*100}%`} as CSSProperties}/></div>
-          {['GATE','PLAZA','AGAVE LAB','LA CAVA','STAGE'].map((place,index)=>{
-            const unlockAt=[1,1,2,6,6][index];
-            return <span className={phase>=unlockAt?'is-on':''} key={place} style={{'--place':index} as CSSProperties}><i>{index+1}</i><b>{place}</b></span>;
-          })}
-          <div className="guest-token" style={{'--journey':`${Math.min(phase,6)/6*100}%`} as CSSProperties}>GUEST</div>
-        </div>
-        <div className={`mission-slip ${phase>=3?'is-open':''}`}>
-          <small>LIVE MISSION / AGAVE LAB</small><b>Decode the aroma</b>
-          <div><span className={phase>=3?'done':''}>01 / VISIT</span><span className={phase>=4?'done':''}>02 / TASTE</span><span className={phase>=4?'done':''}>03 / SCAN</span></div>
-          <em>{phase>=4?'MISSION COMPLETE':'250 POINTS WAITING'}</em>
-        </div>
-        <div className={`passport-card ${phase>=5?'is-open':''}`}>
-          <small>DIGITAL PASSPORT / LEVEL 04</small>
-          <div className="stamp-grid">{['AG','CA','RO','ME','MU','VIP'].map((stamp,index)=><i className={index<4||phase>=5&&index===4?'earned':''} key={stamp}>{stamp}</i>)}</div>
-          <b className="stamp-hit">AGAVE<br/>LAB</b><strong>{phase>=5?'1,850 PTS':'1,600 PTS'}</strong>
-        </div>
-        <div className={`next-stop ${phase>=6?'is-open':''}`}><small>MADE FOR THIS GUEST</small><b>Go to La Cava next.</b><span>Reposado tasting · 2 min walk →</span></div>
-        <div className="journey-status"><small>NOW HAPPENING</small><b>{journeyCopy[phase][0]}</b><span>{journeyCopy[phase][1]}</span></div>
+  const [ref,phase]=useStoryPhase(appSteps.length);
+  return <div ref={ref} role="img" aria-label="The App turns a claimed ticket into entry, a venue journey, missions, stamps, points, and a personal next stop.">
+    <Theater kind="app" labels={appSteps} phase={phase} caption={appCaptions[phase]} truth="WORKING GUEST JOURNEY · LIVE CONNECTIONS COME NEXT">
+      <div className="guest-phone">
+        <div className="phone-bar"><span>TEQUILA TOWN</span><i/></div>
+        {phase===0&&<div className="ticket-screen"><small>JOURNEY PASS · CLAIMED</small><strong>SOFIA R.</strong><span>TT–26–0417</span><b>WELCOME IN →</b></div>}
+        {phase===1&&<div className="route-screen"><small>YOUR NIGHT</small><strong>START HERE.</strong><div className="big-route"><i/><span>GATE</span><span>AGAVE LAB</span><span>LA CAVA</span></div></div>}
+        {phase===2&&<div className="mission-screen"><small>LIVE MISSION · AGAVE LAB</small><strong>Decode<br/>the aroma.</strong><div><span>1 · VISIT</span><span>2 · TASTE</span><span>3 · SCAN</span></div><b>250 POINTS WAITING</b></div>}
+        {phase===3&&<div className="passport-screen"><small>YOUR PASSPORT</small><strong>1,850 POINTS</strong><div>{['AG','CA','RO','ME'].map(item=><i key={item}>{item}</i>)}</div><b>NEW STAMP EARNED</b></div>}
+        {phase===4&&<div className="next-screen"><small>MADE FOR SOFIA</small><strong>GO TO<br/>LA CAVA NEXT.</strong><span>Reposado tasting · 2 minute walk</span><b>SHOW THE WAY →</b></div>}
       </div>
-      <p className="truth-note">WORKING GUEST JOURNEY / TIXR AND WALLET CONNECTIONS ARE THE NEXT BUILD STEP</p>
-    </div>
+    </Theater>
   </div>;
 }
 
-const swarmSteps=['MISSION','ORCHESTRATE','ROUTE','COLLABORATE','SYNTHESIZE','ACT'];
-const specialists=[
-  {name:'ANALYTICS',job:'Measure guest and revenue signals',output:'4 KPI findings'},
-  {name:'SPONSOR INTEL',job:'Find partner activation proof',output:'7 proof points'},
-  {name:'RESEARCH',job:'Add context and source checks',output:'9 sources'},
-  {name:'DOCS',job:'Write the executive story',output:'Recap draft'},
-  {name:'SLIDES',job:'Build the sponsor-ready deck',output:'12 slides'},
+const swarmSteps=['MISSION','ROUTE','WORK','COMBINE','REVIEW'];
+const swarmCaptions=[
+  'One clear mission goes in.',
+  'The lead agent chooses only the specialists the job needs.',
+  'Each specialist works on one clear part.',
+  'Their work returns as one useful result.',
+  'A person checks the result before anything moves forward.',
 ];
+
+const specialists=['ANALYTICS','SPONSOR INTEL','RESEARCH','WRITING','SLIDES'];
 
 export function SwarmStory(){
   const [ref,phase]=useStoryPhase(swarmSteps.length);
-  return <div ref={ref} className="story-demo swarm-story" data-phase={phase} role="img" aria-label="Agent Swarm receives a sponsor recap mission, routes work to five named specialists, combines their outputs, and produces one result for human review.">
-    <div aria-hidden="true">
-      <StoryProgress labels={swarmSteps} phase={phase}/>
-      <div className="swarm-switchboard">
-        <div className={`mission-brief ${phase>=0?'is-on':''}`}><small>MISSION / 21:14</small><b>Create a sponsor recap<br/>for last night.</b><span>One goal. One owner. Clear finish.</span></div>
-        <div className={`orchestrator-block ${phase>=1?'is-on':''}`}><small>MASTER ORCHESTRATOR</small><b>{phase<2?'READING MISSION':'ROUTE LOCKED'}</b><span>5 of 21 specialists needed</span></div>
-        <div className="specialist-grid">{specialists.map((agent,index)=>{
-          const routed=phase>=2;
-          const working=phase>=3;
-          const done=phase>=4;
-          return <article className={`${routed?'is-routed ':''}${working?'is-working ':''}${done?'is-done':''}`} key={agent.name} style={{'--agent':index} as CSSProperties}>
-            <header><span>{String(index+1).padStart(2,'0')}</span><em>{done?'RETURNED':working?'WORKING':routed?'ROUTED':'STANDBY'}</em></header>
-            <b>{agent.name}</b><p>{agent.job}</p><strong>{done?agent.output:'WORK ORDER'}</strong>
-          </article>;
-        })}</div>
-        <div className={`synthesis-rail ${phase>=4?'is-on':''}`}><span>ANALYZE</span><span>PROVE</span><span>WRITE</span><span>DESIGN</span><i/></div>
-        <div className={`recap-output ${phase>=5?'is-open':''}`}>
-          <header><small>EXAMPLE OUTPUT / HUMAN REVIEW</small><b>SPONSOR RECAP</b></header>
-          <div><span><b>01</b>Guest engagement story</span><span><b>02</b>Activation proof</span><span><b>03</b>Partner next moves</span></div>
-          <footer><strong>12-SLIDE DECK</strong><em>READY TO CHECK →</em></footer>
-        </div>
-      </div>
-      <p className="truth-note">REAL ROUTING + REAL SPECIALIST ROSTER / LIVE DATA CONNECTIONS AND MISSION HISTORY ARE THE NEXT BUILD STEP</p>
-    </div>
+  return <div ref={ref} role="img" aria-label="Agent Swarm receives a mission, chooses the right specialists, runs their work, combines the result, and sends it to a person for review.">
+    <Theater kind="swarm" labels={swarmSteps} phase={phase} caption={swarmCaptions[phase]} truth="21 REAL SPECIALISTS · CONNECTIONS AND HISTORY COME NEXT">
+      {phase===0&&<div className="mission-card"><small>MISSION · 9:14 PM</small><strong>CREATE A SPONSOR<br/>RECAP FOR TONIGHT.</strong><span>One goal. One owner. One clear finish.</span></div>}
+      {phase===1&&<div className="route-map"><div className="route-core"><small>LEAD AGENT</small><b>ROUTE</b></div><div>{specialists.map((name,index)=><span key={name} style={{'--agent':index} as CSSProperties}>{name}</span>)}</div></div>}
+      {phase===2&&<div className="work-grid">{specialists.map((name,index)=><div key={name}><small>{String(index+1).padStart(2,'0')} · WORKING</small><b>{name}</b><i><span style={{width:`${[84,72,91,64,78][index]}%`}}/></i></div>)}</div>}
+      {phase===3&&<div className="recap-scene"><small>ONE RESULT · BUILT TOGETHER</small><strong>SPONSOR RECAP</strong><div><span>01 · Guest story</span><span>02 · Activation proof</span><span>03 · Partner next moves</span></div><b>12 SLIDES · READY</b></div>}
+      {phase===4&&<div className="review-scene"><small>HUMAN CHECK</small><strong>THE WORK IS READY.<br/>YOU MAKE THE CALL.</strong><div><span>REVIEW</span><span>REVISE</span><span>APPROVE</span></div></div>}
+    </Theater>
   </div>;
 }
 
-const controlSteps=['SIGNALS','VERIFY','PRIORITIZE','UNDERSTAND','DECIDE'];
-const signals=[
-  {name:'Ticket velocity',source:'TIXR',state:'keep'},
-  {name:'VIP demand',source:'CRM',state:'keep'},
-  {name:'Guest missions',source:'APP',state:'keep'},
-  {name:'Sponsor activity',source:'PARTNER',state:'keep'},
-  {name:'Agent missions',source:'SWARM',state:'keep'},
-  {name:'Press mention',source:'PUBLIC WEB',state:'keep'},
-  {name:'Repeat story',source:'DUPLICATE',state:'drop'},
-  {name:'Wrong brand',source:'NO PROOF',state:'drop'},
+const controlSteps=['COLLECT','CHECK','RANK','DECIDE'];
+const controlCaptions=[
+  'Control Center brings scattered business signals into one place.',
+  'It removes repeats and facts that cannot be proved.',
+  'The three signals with the most impact rise to the top.',
+  'A long day of data becomes three clear moves.',
 ];
 
 export function ControlStory(){
   const [ref,phase]=useStoryPhase(controlSteps.length);
-  return <div ref={ref} className="story-demo control-story" data-phase={phase} role="img" aria-label="Control Center receives many source types, rejects duplicates and unverified noise, ranks the strongest facts, and turns them into three next moves.">
-    <div aria-hidden="true">
-      <StoryProgress labels={controlSteps} phase={phase}/>
-      <div className="signal-refinery">
-        <div className="signal-intake"><header><span>CONCEPTUAL CONNECTED VIEW</span><b>MANY SIGNALS</b></header>{signals.map((signal,index)=>{
-          const dropped=phase>=1&&signal.state==='drop';
-          const verified=phase>=1&&signal.state==='keep';
-          return <article className={`${dropped?'is-dropped ':''}${verified?'is-verified':''}`} key={signal.name} style={{'--signal':index} as CSSProperties}><i/><div><b>{signal.name}</b><small>{signal.source}</small></div><em>{dropped?'OUT':verified?'CHECKED':'IN'}</em></article>;
-        })}</div>
-        <div className={`verification-gate ${phase>=1?'is-on':''}`}><span>SOURCE</span><span>IDENTITY</span><span>FRESHNESS</span><span>DUPLICATE</span><b>{phase>=1?'6 FACTS PASS':'CHECKING'}</b></div>
-        <div className={`priority-stack ${phase>=2?'is-on':''}`}><header><span>RANKED BY IMPACT</span><b>WHY IT MATTERS</b></header><article><em>96</em><div><b>VIP demand is rising</b><small>Strong booking intent</small></div></article><article><em>88</em><div><b>Premium tickets moved faster</b><small>Inventory decision needed</small></div></article><article><em>82</em><div><b>Sponsor room drew repeat visits</b><small>Recap opportunity</small></div></article></div>
-        <div className={`daily-brief ${phase>=3?'is-open':''}`}>
-          <header><small>TODAY / EXECUTIVE BRIEF</small><b>Three moves matter now.</b></header>
-          <ol><li><b>1</b><span>Call the top VIP groups.</span></li><li><b>2</b><span>Open more premium seats.</span></li><li><b>3</b><span>Build the sponsor recap.</span></li></ol>
-          <footer><span>PROOF ATTACHED</span><em>{phase>=4?'READY TO DECIDE':'BUILDING THE BRIEF'}</em></footer>
-        </div>
-      </div>
-      <p className="truth-note">VERIFICATION-FIRST PRODUCT FLOW / TEQUILA TOWN BUSINESS FEEDS SHOWN HERE ARE THE CONNECTION PLAN, NOT LIVE CLAIMS</p>
-    </div>
+  return <div ref={ref} role="img" aria-label="Control Center collects many signals, checks what is real, ranks the strongest facts, and turns them into three clear moves.">
+    <Theater kind="control" labels={controlSteps} phase={phase} caption={controlCaptions[phase]} truth="WORKING VERIFICATION FLOW · TEQUILA TOWN FEEDS COME NEXT">
+      {phase===0&&<div className="signal-cloud"><small>MANY SIGNALS · ONE VIEW</small><div>{['TICKET SPEED','VIP DEMAND','GUEST MISSIONS','SPONSOR ACTIVITY','TEAM WORK','PRESS'].map(item=><span key={item}>{item}</span>)}</div></div>}
+      {phase===1&&<div className="check-scene"><small>TRUTH GATE</small><strong>6 FACTS PASS.<br/>2 GET CUT.</strong><div><span>SOURCE ✓</span><span>IDENTITY ✓</span><span>FRESHNESS ✓</span><span>NO REPEATS ✓</span></div></div>}
+      {phase===2&&<div className="priority-scene"><small>RANKED BY IMPACT</small>{[['96','VIP demand is rising'],['88','Premium tickets moved faster'],['82','Sponsor room drew repeat visits']].map(([score,text])=><div key={score}><strong>{score}</strong><span>{text}</span></div>)}</div>}
+      {phase===3&&<div className="brief-scene"><small>TODAY · THREE MOVES</small><strong>DO THIS NEXT.</strong><ol><li><b>1</b>Call the top VIP groups.</li><li><b>2</b>Open more premium seats.</li><li><b>3</b>Build the sponsor recap.</li></ol><span>PROOF ATTACHED · READY TO DECIDE</span></div>}
+    </Theater>
   </div>;
 }
 
@@ -242,13 +162,12 @@ const handoffs=[
 
 export function OperatingLoopStory(){
   const [ref,phase]=useStoryPhase(loopSteps.length);
-  return <div ref={ref} className="operating-loop" data-phase={phase} role="img" aria-label="Radar, the App, Agent Swarm, and Control Center pass useful information around one improving operating loop.">
-    <div aria-hidden="true">
-      <StoryProgress labels={loopSteps} phase={phase}/>
-      <div className="loop-workbench">
-        {handoffs.map(([from,data,to,result],index)=><article className={phase>=index?'is-on':''} key={from} style={{'--handoff':index} as CSSProperties}><header><span>{String(index+1).padStart(2,'0')}</span><b>{from}</b><i>→</i><b>{to}</b></header><p>{data}</p><strong>{result}</strong></article>)}
-        <div className={phase>=4?'learning-core is-on':'learning-core'}><small>EACH CYCLE</small><b>LEARNS</b><span>Better target. Better visit.<br/>Better work. Better decision.</span></div>
-      </div>
+  const handoff=handoffs[Math.min(phase,handoffs.length-1)];
+  return <div ref={ref} className="loop-theater" data-phase={phase} role="img" aria-label="Radar, the App, Agent Swarm, and Control Center pass useful information around one improving operating loop.">
+    <div className="loop-progress"><span>{String(phase+1).padStart(2,'0')} / 05</span><strong>{loopSteps[phase]}</strong><div>{loopSteps.map((step,index)=><i className={index<=phase?'on':''} key={step}/>)}</div></div>
+    <div className="loop-scene scene-in" key={`loop-${phase}`}>
+      {phase<4?<><div className="loop-product"><small>FROM</small><strong>{handoff[0]}</strong><span>{handoff[1]}</span></div><b className="loop-arrow">→</b><div className="loop-product"><small>TO</small><strong>{handoff[2]}</strong><span>{handoff[3]}</span></div></>:<div className="learn-scene"><small>EVERY FULL TURN</small><strong>THE SYSTEM<br/>LEARNS.</strong><div><span>BETTER TARGET</span><span>BETTER NIGHT</span><span>BETTER WORK</span><span>BETTER CALL</span></div></div>}
     </div>
+    <p className="loop-caption">{phase<4?`${handoff[0]} gives ${handoff[2]} a better signal.`:'The next night starts with better information.'}</p>
   </div>;
 }

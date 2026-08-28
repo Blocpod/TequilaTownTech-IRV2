@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import './globals.css';
+import './theaters.css';
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://tequila-town-technology.blocpodcreative.chatgpt.site'),
