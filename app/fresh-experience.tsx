@@ -9,8 +9,11 @@ export default function FreshExperience(){
     const fine=matchMedia('(hover:hover) and (pointer:fine)').matches;
     const observer=new IntersectionObserver(entries=>entries.forEach(entry=>{if(entry.isIntersecting){entry.target.classList.add('is-visible');observer.unobserve(entry.target)}}),{threshold:.12,rootMargin:'0px 0px -7%'});
     document.querySelectorAll('[data-reveal]').forEach(element=>observer.observe(element));
+    const storySections=[...document.querySelectorAll<HTMLElement>('#radar,#app,#swarm,#control,#loop,#build,#end')];
+    const navigationLinks=[...document.querySelectorAll<HTMLAnchorElement>('.topbar nav a')];
+    let lastActiveHref='';
     let progressFrame=0;
-    const update=()=>{cancelAnimationFrame(progressFrame);progressFrame=requestAnimationFrame(()=>{const page=Math.max(1,document.documentElement.scrollHeight-innerHeight);root.style.setProperty('--progress',String(Math.min(1,scrollY/page)))})};
+    const update=()=>{cancelAnimationFrame(progressFrame);progressFrame=requestAnimationFrame(()=>{const page=Math.max(1,document.documentElement.scrollHeight-innerHeight);root.style.setProperty('--progress',String(Math.min(1,scrollY/page)));const guide=innerHeight*.34;const active=storySections.find(section=>{const rect=section.getBoundingClientRect();return rect.top<=guide&&rect.bottom>=guide});const activeHref=active?(['radar','app','swarm','control'].includes(active.id)?'#radar':['build','end'].includes(active.id)?'#build':'#loop'):'';if(activeHref!==lastActiveHref){lastActiveHref=activeHref;navigationLinks.forEach(link=>{const isActive=link.getAttribute('href')===activeHref;link.toggleAttribute('data-active',isActive);if(isActive)link.setAttribute('aria-current','location');else link.removeAttribute('aria-current')})}})};
     const magnets=fine?[...document.querySelectorAll<HTMLElement>('.mag')]:[];
     const menu=document.querySelector<HTMLDetailsElement>('.menu');
     const menuLinks=menu?[...menu.querySelectorAll<HTMLAnchorElement>('a')]:[];
@@ -21,7 +24,7 @@ export default function FreshExperience(){
     menuLinks.forEach(link=>link.addEventListener('click',closeMenu));
     addEventListener('scroll',update,{passive:true});addEventListener('resize',update);update();
     if(!reduced)requestAnimationFrame(()=>root.classList.add('ready'));else root.classList.add('ready');
-    return()=>{observer.disconnect();cancelAnimationFrame(progressFrame);removeEventListener('scroll',update);removeEventListener('resize',update);magnets.forEach(item=>{item.removeEventListener('pointermove',move);item.removeEventListener('pointerleave',leave)});menuLinks.forEach(link=>link.removeEventListener('click',closeMenu));root.classList.remove('js','has-motion','ready')};
+    return()=>{observer.disconnect();cancelAnimationFrame(progressFrame);removeEventListener('scroll',update);removeEventListener('resize',update);magnets.forEach(item=>{item.removeEventListener('pointermove',move);item.removeEventListener('pointerleave',leave)});menuLinks.forEach(link=>link.removeEventListener('click',closeMenu));navigationLinks.forEach(link=>{link.removeAttribute('data-active');link.removeAttribute('aria-current')});root.classList.remove('js','has-motion','ready')};
   },[]);
   return null;
 }
